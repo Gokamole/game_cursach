@@ -1,18 +1,31 @@
-class Person:
-    def __init__(self, name, health_points, attack_points, defense_power, mana_points):
+class Character:
+    def __init__(self, name, health_points, defense_points, mana_points,):
         self.name = name
-        self.hp = health_points
-        self.ap = attack_points
-        self.defense = defense_power
-        self.mana = mana_points
-        self.heal_amount = health_points / 10
+        self.health_points = health_points
+        self.max_health_points = health_points
+        self.defense_points = defense_points
+        self.mana_points = mana_points
+
+    def take_damage(self, damage_amount):
+        self.health_points -= max(damage_amount - self.defense_points, 0)
+        if self.health_points < 0:
+            self.health_points = 0
+        print(f"{self.name} получил {max(damage_amount - self.defense_points, 0)} урона. Осталось здоровья: {self.health_points}")
     
-    def attack(self, target):
-        damage = self.ap
-        target.take_damage(damage)
-        print(f"{self.name} атаковал {target.name} и нанёс {damage} урона.")
+    def heal(self, heal_amount):
+        if self.health_points > 0:
+            self.health_points += heal_amount
+            self.health_points = min(self.health_points, self.max_health_points)
+            print(f"{self.name} восстановил {heal_amount} здоровья и сейчас имеет {self.health_points}.")
+        else:
+            print(f"{self.name} не может восстановить здоровье, так как он мертв.")
 
-character1 = Person("Виктор", 50, 10, 5, 20)
-character2 = Person("Петр", 50, 10, 5, 20)
+class Mage(Character):
+    def __init__(self, name, health_points, defense_points, mana_points, spell_power):
+        super().__init__(name, health_points, defense_points, mana_points)
 
-character1.attack(character2)
+
+character = Character("1")
+
+character.take_damage(60)
+character.heal(10)
